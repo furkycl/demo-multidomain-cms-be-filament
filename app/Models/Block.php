@@ -11,55 +11,39 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Sıralı, tipli içerik bloğu.
  *
- * @property int $id
- * @property int $page_id
- * @property string $type
- * @property int $order
- * @property array $content   Type-specific JSON; bkz. docs/blocks/<type>.md
- * @property int $schema_version
+ * Block tipleri kategorilere ayrılır (Filament UI'da gruplanır):
+ *   Hero       : hero, hero_school, hero_video
+ *   Content    : rich_text, course_grid, accommodation_grid, destinations_grid,
+ *                city_highlights, article_list, products_grid
+ *   Layout     : header, footer, footer_mega, trust_bar
+ *   Conversion : cta_banner, contact_form, pricing_table, faq, testimonials
  */
 class Block extends Model
 {
     use HasFactory;
 
-    /**
-     * Bilinen blok tipleri.
-     *
-     * Genel:
-     *   header, hero, rich_text, footer
-     *
-     * Microsite (Kaplan/Alpadia/Azurlingua) template:
-     *   hero_school, course_grid, accommodation_grid, city_highlights,
-     *   article_list, pricing_table, contact_form, faq, testimonials,
-     *   trust_bar, cta_banner, footer_mega
-     */
     public const TYPES = [
-        // Generic
-        'header',
-        'hero',
-        'rich_text',
-        'footer',
-        // School microsite
-        'hero_school',
-        'course_grid',
-        'accommodation_grid',
-        'city_highlights',
-        'article_list',
-        'pricing_table',
-        'contact_form',
-        'faq',
-        'testimonials',
-        'trust_bar',
-        'cta_banner',
-        'footer_mega',
+        // Hero
+        'hero', 'hero_school', 'hero_video',
+        // Content
+        'rich_text', 'course_grid', 'accommodation_grid', 'destinations_grid',
+        'city_highlights', 'article_list',
+        // Layout
+        'header', 'footer', 'footer_mega', 'trust_bar',
+        // Conversion
+        'cta_banner', 'contact_form', 'pricing_table', 'faq', 'testimonials',
+    ];
+
+    /** Filament UI'da bloklar bu kategoriler altında gösterilir. */
+    public const CATEGORIES = [
+        'Hero (sayfa başı)' => ['hero_video', 'hero_school', 'hero'],
+        'İçerik' => ['destinations_grid', 'course_grid', 'article_list', 'city_highlights', 'accommodation_grid', 'rich_text'],
+        'Dönüşüm (lead/CTA)' => ['contact_form', 'cta_banner', 'pricing_table', 'testimonials', 'faq'],
+        'Düzen (header/footer)' => ['footer_mega', 'trust_bar', 'header', 'footer'],
     ];
 
     protected $fillable = [
-        'page_id',
-        'type',
-        'order',
-        'content',
-        'schema_version',
+        'page_id', 'type', 'order', 'content', 'schema_version',
     ];
 
     protected $casts = [
