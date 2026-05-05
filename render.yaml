@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: multi-cms-backend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    rootDir: .
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false        # generate manually with php artisan key:generate, paste in dashboard
+      - key: APP_URL
+        sync: false        # set after first deploy (Render gives the URL)
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL
+        sync: false        # paste Neon pooled connection string here
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: FILESYSTEM_DISK
+        value: r2
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_ENDPOINT
+        sync: false
+      - key: R2_URL
+        sync: false
+
+# Notes:
+# - Dockerfile lives at backend/Dockerfile (php 8.3-fpm with nginx).
+# - First deploy: set APP_KEY and DATABASE_URL via Render dashboard, then deploy.
+# - Run `php artisan migrate --force` is included in the Dockerfile entrypoint.
