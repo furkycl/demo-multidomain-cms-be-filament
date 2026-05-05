@@ -23,6 +23,10 @@ class PageResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $localeOptions = collect(config('locales.supported', []))
+            ->map(fn ($v, $k) => "{$k} — {$v['native_name']}")
+            ->toArray();
+
         return $form->schema([
             Forms\Components\Section::make('Sayfa')->schema([
                 Forms\Components\Select::make('site_id')
@@ -30,15 +34,17 @@ class PageResource extends Resource
                     ->required()
                     ->searchable()
                     ->preload(),
+                Forms\Components\Select::make('locale')
+                    ->required()
+                    ->options($localeOptions)
+                    ->default(config('locales.default'))
+                    ->helperText('Bu sayfanın dili. Aynı slug + farklı locale = aynı sayfanın çeviri kaydı.'),
                 Forms\Components\TextInput::make('slug')
                     ->required()
-                    ->placeholder('/about')
-                    ->helperText('Ana sayfa için "/" yaz.'),
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(200),
-                Forms\Components\Toggle::make('is_published')
-                    ->label('Yayında'),
+                    ->placeholder('/ veya /courses')
+                    ->helperText('Locale-bağımsız slug. URL\'de /[locale]/[slug] olur.'),
+                Forms\Components\TextInput::make('title')->required()->maxLength(200),
+                Forms\Components\Toggle::make('is_published')->label('Yayında'),
             ])->columns(2),
 
             Forms\Components\Section::make('SEO')->schema([
@@ -54,6 +60,7 @@ class PageResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('site.domain')->sortable(),
+                Tables\Columns\TextColumn::make('locale')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('slug')->searchable(),
                 Tables\Columns\TextColumn::make('title')->searchable(),
                 Tables\Columns\IconColumn::make('is_published')->boolean(),
@@ -62,18 +69,18 @@ class PageResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('site')->relationship('site', 'name'),
+                Tables\Filters\SelectFilter::make('locale')
+                    ->options(fn () => collect(config('locales.supported', []))
+                        ->map(fn ($v, $k) => "{$k} — {$v['native_name']}")
+                        ->toArray()),
                 Tables\Filters\TernaryFilter::make('is_published'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ]);
+            ->actions([Tables\Actions\EditAction::make()]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            BlocksRelationManager::class,
-        ];
+        return [BlocksRelationManager::class];
     }
 
     public static function getPages(): array

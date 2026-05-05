@@ -9,25 +9,49 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Sıralı, tipli içerik bloğu. content her tip için farklı JSON şeması — docs/blocks/ altında.
+ * Sıralı, tipli içerik bloğu.
  *
  * @property int $id
  * @property int $page_id
- * @property string $type           'header' | 'hero' | 'rich_text' | 'footer' | ...
+ * @property string $type
  * @property int $order
- * @property array $content         Type-specific JSON; see docs/blocks/<type>.md
+ * @property array $content   Type-specific JSON; bkz. docs/blocks/<type>.md
  * @property int $schema_version
  */
 class Block extends Model
 {
     use HasFactory;
 
-    /** Known block types. Genişledikçe buraya ekle ve docs/blocks/ altında spec yaz. */
+    /**
+     * Bilinen blok tipleri.
+     *
+     * Genel:
+     *   header, hero, rich_text, footer
+     *
+     * Microsite (Kaplan/Alpadia/Azurlingua) template:
+     *   hero_school, course_grid, accommodation_grid, city_highlights,
+     *   article_list, pricing_table, contact_form, faq, testimonials,
+     *   trust_bar, cta_banner, footer_mega
+     */
     public const TYPES = [
+        // Generic
         'header',
         'hero',
         'rich_text',
         'footer',
+        // School microsite
+        'hero_school',
+        'course_grid',
+        'accommodation_grid',
+        'city_highlights',
+        'article_list',
+        'pricing_table',
+        'contact_form',
+        'faq',
+        'testimonials',
+        'trust_bar',
+        'cta_banner',
+        'footer_mega',
     ];
 
     protected $fillable = [

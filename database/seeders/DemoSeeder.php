@@ -17,26 +17,22 @@ class DemoSeeder extends Seeder
             ['domain' => 'localhost'],
             [
                 'name' => 'Demo Site',
-                'theme' => [
-                    'primary_color' => '#0ea5e9',
-                    'font' => 'Inter',
-                ],
+                'brand' => 'kaplan',
+                'city' => 'London',
+                'country' => 'GB',
+                'theme' => ['primary_color' => '#0ea5e9', 'font' => 'Inter'],
             ],
         );
 
         $home = Page::firstOrCreate(
-            ['site_id' => $site->id, 'slug' => '/'],
+            ['site_id' => $site->id, 'locale' => 'tr', 'slug' => '/'],
             [
                 'title' => 'Ana Sayfa',
                 'is_published' => true,
-                'seo' => [
-                    'title' => 'Demo Site - Hoş geldin',
-                    'description' => 'multi-cms ile çalışan demo site',
-                ],
+                'seo' => ['title' => 'Demo Site', 'description' => 'multi-cms demo'],
             ],
         );
 
-        // Eski blokları sil (idempotent)
         $home->blocks()->delete();
 
         Block::create([
@@ -46,7 +42,6 @@ class DemoSeeder extends Seeder
             'content' => [
                 'title' => 'Demo Site',
                 'background_color' => '#0ea5e9',
-                'logo_url' => null,
                 'links' => [
                     ['label' => 'Ana Sayfa', 'href' => '/'],
                     ['label' => 'Hakkımızda', 'href' => '/about'],
@@ -60,7 +55,7 @@ class DemoSeeder extends Seeder
             'order' => 1,
             'content' => [
                 'headline' => 'Tek panelden tüm sitelerini yönet',
-                'subheadline' => "Filament admin'den blok ekle, anında her domainde göster.",
+                'subheadline' => 'Filament admin paneli ile hızlı içerik yönetimi.',
                 'cta_label' => 'Hemen başla',
                 'cta_href' => '/get-started',
                 'background_color' => '#0f172a',
@@ -73,7 +68,7 @@ class DemoSeeder extends Seeder
             'type' => 'rich_text',
             'order' => 2,
             'content' => [
-                'markdown' => "## Nasıl çalışır?\n\nFilament panelinde site ekle, sayfa aç, blok düzenle. Frontend ISR ile sayfayı tazeler.",
+                'markdown' => "## Nasıl çalışır?\n\nFilament panelinde site ekle, sayfa aç, blok düzenle.",
             ],
         ]);
 
