@@ -1,80 +1,32 @@
 <?php
-
 declare(strict_types=1);
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * Sıralı, tipli içerik bloğu.
- *
- * @property int $id
- * @property int $page_id
- * @property string $type
- * @property int $order
- * @property array $content   Type-specific JSON; bkz. docs/blocks/<type>.md
- * @property int $schema_version
- */
 class Block extends Model
 {
     use HasFactory;
 
-    /**
-     * Bilinen blok tipleri.
-     *
-     * Genel:
-     *   header, hero, rich_text, footer
-     *
-     * Microsite (Kaplan/Alpadia/Azurlingua) template:
-     *   hero_school, course_grid, accommodation_grid, city_highlights,
-     *   article_list, pricing_table, contact_form, faq, testimonials,
-     *   trust_bar, cta_banner, footer_mega
-     */
     public const TYPES = [
-        // Generic
-        'header',
-        'hero',
-        'rich_text',
-        'footer',
-        // School microsite
-        'hero_school',
-        'course_grid',
-        'accommodation_grid',
-        'city_highlights',
-        'article_list',
-        'pricing_table',
-        'contact_form',
-        'faq',
-        'testimonials',
-        'trust_bar',
-        'cta_banner',
-        'footer_mega',
+        'hero', 'hero_school', 'hero_video',
+        'rich_text', 'course_grid', 'accommodation_grid', 'destinations_grid',
+        'city_highlights', 'article_list',
+        'header', 'footer', 'footer_mega', 'trust_bar',
+        'cta_banner', 'contact_form', 'pricing_table', 'faq', 'testimonials',
     ];
 
-    protected $fillable = [
-        'page_id',
-        'type',
-        'order',
-        'content',
-        'schema_version',
+    public const CATEGORIES = [
+        'Hero (sayfa başı)' => ['hero_video', 'hero_school', 'hero'],
+        'İçerik' => ['destinations_grid', 'course_grid', 'article_list', 'city_highlights', 'accommodation_grid', 'rich_text'],
+        'Dönüşüm (lead/CTA)' => ['contact_form', 'cta_banner', 'pricing_table', 'testimonials', 'faq'],
+        'Düzen (header/footer)' => ['header', 'footer_mega', 'trust_bar', 'footer'],
     ];
 
-    protected $casts = [
-        'content' => 'array',
-        'order' => 'integer',
-        'schema_version' => 'integer',
-    ];
+    protected $fillable = ['page_id', 'type', 'order', 'content', 'schema_version'];
+    protected $casts = ['content' => 'array', 'order' => 'integer', 'schema_version' => 'integer'];
+    protected $attributes = ['schema_version' => 1, 'content' => '{}'];
 
-    protected $attributes = [
-        'schema_version' => 1,
-        'content' => '{}',
-    ];
-
-    public function page(): BelongsTo
-    {
-        return $this->belongsTo(Page::class);
-    }
+    public function page(): BelongsTo { return $this->belongsTo(Page::class); }
 }
