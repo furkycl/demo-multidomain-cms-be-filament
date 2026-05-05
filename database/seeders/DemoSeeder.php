@@ -1,86 +1,25 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Database\Seeders;
-
-use App\Models\Block;
-use App\Models\Page;
-use App\Models\Site;
 use Illuminate\Database\Seeder;
 
 class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        $site = Site::firstOrCreate(
-            ['domain' => 'localhost'],
-            [
-                'name' => 'Demo Site',
-                'brand' => 'kaplan',
-                'city' => 'London',
-                'country' => 'GB',
-                'theme' => ['primary_color' => '#0ea5e9', 'font' => 'Inter'],
-            ],
-        );
+        // Brand-neutral demo: 3 site, hepsi neutral placeholder içerikle
+        $sites = [
+            ['domain' => 'site-a.local', 'name' => 'Site A', 'city' => 'City A', 'country' => 'GB'],
+            ['domain' => 'site-b.local', 'name' => 'Site B', 'city' => 'City B', 'country' => 'US'],
+            ['domain' => 'site-c.local', 'name' => 'Site C', 'city' => 'City C', 'country' => 'FR'],
+        ];
 
-        $home = Page::firstOrCreate(
-            ['site_id' => $site->id, 'locale' => 'tr', 'slug' => '/'],
-            [
-                'title' => 'Ana Sayfa',
-                'is_published' => true,
-                'seo' => ['title' => 'Demo Site', 'description' => 'multi-cms demo'],
-            ],
-        );
-
-        $home->blocks()->delete();
-
-        Block::create([
-            'page_id' => $home->id,
-            'type' => 'header',
-            'order' => 0,
-            'content' => [
-                'title' => 'Demo Site',
-                'background_color' => '#0ea5e9',
-                'links' => [
-                    ['label' => 'Ana Sayfa', 'href' => '/'],
-                    ['label' => 'Hakkımızda', 'href' => '/about'],
-                ],
-            ],
-        ]);
-
-        Block::create([
-            'page_id' => $home->id,
-            'type' => 'hero',
-            'order' => 1,
-            'content' => [
-                'headline' => 'Tek panelden tüm sitelerini yönet',
-                'subheadline' => 'Filament admin paneli ile hızlı içerik yönetimi.',
-                'cta_label' => 'Hemen başla',
-                'cta_href' => '/get-started',
-                'background_color' => '#0f172a',
-                'text_color' => '#ffffff',
-            ],
-        ]);
-
-        Block::create([
-            'page_id' => $home->id,
-            'type' => 'rich_text',
-            'order' => 2,
-            'content' => [
-                'markdown' => "## Nasıl çalışır?\n\nFilament panelinde site ekle, sayfa aç, blok düzenle.",
-            ],
-        ]);
-
-        Block::create([
-            'page_id' => $home->id,
-            'type' => 'footer',
-            'order' => 3,
-            'content' => [
-                'text' => '© '.date('Y').' Demo Site',
-                'background_color' => '#0f172a',
-                'text_color' => '#94a3b8',
-            ],
-        ]);
+        foreach ($sites as $s) {
+            $this->command->call('multi-cms:provision-site', [
+                '--domain' => $s['domain'], '--name' => $s['name'],
+                '--brand' => 'kaplan', '--city' => $s['city'], '--country' => $s['country'],
+                '--locales' => 'tr,en', '--force' => true,
+            ]);
+        }
     }
 }
