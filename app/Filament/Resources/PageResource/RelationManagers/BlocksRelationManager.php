@@ -64,7 +64,7 @@ class BlocksRelationManager extends RelationManager
                     ->schema([
                         Forms\Components\TextInput::make('value')->required()->placeholder('80+'),
                         Forms\Components\TextInput::make('label')->required()->placeholder('Years'),
-                    ])->columns(2)->collapsed()->itemLabel(fn ($s) => ($s['value'] ?? '').' '.($s['label'] ?? '')),
+                    ])->columns(2)->collapsed()->itemLabel(fn ($state) => ($state['value'] ?? '').' '.($state['label'] ?? '')),
             ],
             'hero_school' => [
                 Forms\Components\TextInput::make('badge_text'),
@@ -96,7 +96,7 @@ class BlocksRelationManager extends RelationManager
                     Forms\Components\Textarea::make('description')->rows(2),
                     Forms\Components\TextInput::make('badge')->placeholder('Popular'),
                 ])->columns(2)->collapsed()
-                  ->itemLabel(fn ($s) => isset($s['city']) ? $s['city'].(isset($s['country']) ? ' — '.$s['country'] : '') : null),
+                  ->itemLabel(fn ($state) => isset($state['city']) ? $state['city'].(isset($state['country']) ? ' — '.$state['country'] : '') : null),
             ],
             'about' => [
                 Forms\Components\TextInput::make('title')->required()->placeholder('Why Choose Us'),
@@ -112,7 +112,7 @@ class BlocksRelationManager extends RelationManager
                             ->helperText('Emoji veya ikon adı'),
                         Forms\Components\TextInput::make('title')->required(),
                         Forms\Components\Textarea::make('description')->rows(2),
-                    ])->columns(3)->collapsed()->itemLabel(fn ($s) => $s['title'] ?? null),
+                    ])->columns(3)->collapsed()->itemLabel(fn ($state) => $state['title'] ?? null),
             ],
             'course_grid' => [
                 Forms\Components\TextInput::make('title'), Forms\Components\Textarea::make('intro')->rows(2),
@@ -122,7 +122,7 @@ class BlocksRelationManager extends RelationManager
                     Forms\Components\TextInput::make('duration'), Forms\Components\TextInput::make('price_from'),
                     Forms\Components\FileUpload::make('image_url')->image()->visibility('public'),
                     Forms\Components\TextInput::make('href'), Forms\Components\Textarea::make('description')->rows(2),
-                ])->columns(2)->collapsed()->itemLabel(fn ($s) => $s['name'] ?? null),
+                ])->columns(2)->collapsed()->itemLabel(fn ($state) => $state['name'] ?? null),
             ],
             'accommodation_grid' => [
                 Forms\Components\TextInput::make('title'),
@@ -133,14 +133,14 @@ class BlocksRelationManager extends RelationManager
                     Forms\Components\FileUpload::make('image_url')->image()->visibility('public'),
                     Forms\Components\Textarea::make('description')->rows(2),
                     Forms\Components\TagsInput::make('features'),
-                ])->columns(2)->collapsed()->itemLabel(fn ($s) => $s['name'] ?? null),
+                ])->columns(2)->collapsed()->itemLabel(fn ($state) => $state['name'] ?? null),
             ],
             'city_highlights' => [
                 Forms\Components\TextInput::make('title'), Forms\Components\Textarea::make('intro')->rows(3),
                 Forms\Components\Repeater::make('highlights')->schema([
                     Forms\Components\TextInput::make('icon'), Forms\Components\TextInput::make('title')->required(),
                     Forms\Components\Textarea::make('description')->rows(2),
-                ])->columns(3)->collapsed()->itemLabel(fn ($s) => $s['title'] ?? null),
+                ])->columns(3)->collapsed()->itemLabel(fn ($state) => $state['title'] ?? null),
             ],
             'article_list' => [
                 Forms\Components\TextInput::make('title'),
@@ -150,7 +150,7 @@ class BlocksRelationManager extends RelationManager
                     Forms\Components\FileUpload::make('image_url')->image()->visibility('public'),
                     Forms\Components\DatePicker::make('date'),
                     Forms\Components\TextInput::make('href'), Forms\Components\TextInput::make('category'),
-                ])->columns(2)->collapsed()->itemLabel(fn ($s) => $s['title'] ?? null),
+                ])->columns(2)->collapsed()->itemLabel(fn ($state) => $state['title'] ?? null),
             ],
             'rich_text' => [Forms\Components\Textarea::make('markdown')->rows(10)],
             'contact_form' => [
@@ -178,14 +178,14 @@ class BlocksRelationManager extends RelationManager
                     Forms\Components\TextInput::make('period'), Forms\Components\TagsInput::make('features'),
                     Forms\Components\TextInput::make('cta_label'), Forms\Components\TextInput::make('cta_href'),
                     Forms\Components\Toggle::make('highlighted'),
-                ])->columns(2)->collapsed()->itemLabel(fn ($s) => $s['name'] ?? null),
+                ])->columns(2)->collapsed()->itemLabel(fn ($state) => $state['name'] ?? null),
             ],
             'faq' => [
                 Forms\Components\TextInput::make('title'),
                 Forms\Components\Repeater::make('items')->schema([
                     Forms\Components\TextInput::make('question')->required(),
                     Forms\Components\Textarea::make('answer')->rows(3)->required(),
-                ])->collapsed()->itemLabel(fn ($s) => $s['question'] ?? null),
+                ])->collapsed()->itemLabel(fn ($state) => $state['question'] ?? null),
             ],
             'testimonials' => [
                 Forms\Components\TextInput::make('title'),
@@ -195,7 +195,7 @@ class BlocksRelationManager extends RelationManager
                     Forms\Components\TextInput::make('author_title'),
                     Forms\Components\FileUpload::make('avatar_url')->image()->visibility('public'),
                     Forms\Components\TextInput::make('rating')->numeric()->minValue(1)->maxValue(5),
-                ])->columns(2)->collapsed()->itemLabel(fn ($s) => $s['author'] ?? null),
+                ])->columns(2)->collapsed()->itemLabel(fn ($state) => $state['author'] ?? null),
             ],
             'header' => [
                 Forms\Components\TextInput::make('title'),
@@ -210,7 +210,7 @@ class BlocksRelationManager extends RelationManager
                 Forms\Components\Repeater::make('links')->schema([
                     Forms\Components\TextInput::make('label')->required(),
                     Forms\Components\TextInput::make('href')->required(),
-                ])->columns(2)->itemLabel(fn ($s) => $s['label'] ?? null),
+                ])->columns(2)->itemLabel(fn ($state) => $state['label'] ?? null),
             ],
             'footer' => [
                 Forms\Components\TextInput::make('text'),
@@ -241,7 +241,7 @@ class BlocksRelationManager extends RelationManager
                     Forms\Components\TextInput::make('name')->required(),
                     Forms\Components\FileUpload::make('image_url')->image()->visibility('public')->required(),
                     Forms\Components\TextInput::make('href')->url(),
-                ])->columns(3)->collapsed()->itemLabel(fn ($s) => $s['name'] ?? null),
+                ])->columns(3)->collapsed()->itemLabel(fn ($state) => $state['name'] ?? null),
             ],
             default => [],
         };
